@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>DrawGame.io</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="drawGame.css">   
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="drawGame.js"></script>
+    </head>
+    <body>
+        <% include header %>
+        <div id="gameSection" class="m-3">
+            <div class="d-flex justify-content-center p-3">
+                <div class="flex-column">
+                    <div class="text-center"><h1>PLAYER A</h1></div>
+                    <div id="playerA" class="m-3"><canvas id="Sketchpad" width="60" height="40"></canvas></div> 
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary btn-lg m-1" onclick="clearCanvas()">clear</button>
+                        <!-- <button type="button" class="btn btn-primary btn-lg m-1" onclick="saveCanvas()">save</button> -->
+                    </div>
+                </div>
+                <div class="flex-column">
+                    <div class="text-center"><h1>PLAYER B</h1></div>
+                    <div id="playerB" class="m-3"><img id="image"></div>    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

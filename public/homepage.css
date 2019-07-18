@@ -1,0 +1,15 @@
+ @import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+body{
+    font-family: 'Noto Sans TC';
+}
+
+#preGameSection{
+    width: 60vw; 
+    padding-top: 10vh;
+}
+
+#preGame{
+    border: 0.5px solid #b2bec3;
+    border-radius: 0.5rem;
+    background: #81ecec;
+}

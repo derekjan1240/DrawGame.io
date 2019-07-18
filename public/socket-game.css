@@ -1,0 +1,32 @@
+canvas { 
+    border: 1px solid black;
+    background: white;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#playerB { 
+    width: 40vw;
+    height: 50vh; 
+    border: 1px solid black;
+    background: white;
+}
+
+#gameSection{
+    background: #ffeaa7;
+    display: none;
+}
+
+#preGameSection{
+    width: 50vw; 
+    padding-top: 10vh;
+}
+
+#preGame{
+    border: 0.5px solid #b2bec3;
+    border-radius: 0.5rem;
+    background: #81ecec;
+}
