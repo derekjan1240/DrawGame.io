@@ -9,10 +9,10 @@
     <body>
         <% include header %>
         <div id="preGameSection" class="container-fluid justify-content-center">
-            <div id="preGame" class="d-flex flex-column text-center p-3 m-5">
+            <div id="preGame" class="d-flex flex-column text-center mb-5">
                 <div>
-                    <h1 class="p-3">About Game</h1>
-                    <p>balalala</p>
+                    <h2 class="p-3">Draw.io</h2>
+                    <img id="painter" src="/painter.png" alt= "QQ" onclick="colorImg()">
                 </div>
                 <div class="d-flex justify-content-center p-3">
                     <a id="LoginBtn" class="btn btn-primary btn-lg m-1" href="/login">Login</a>
@@ -21,4 +21,14 @@
             </div>
         </div>
     </body>
+    <script>
+        let index = 0;
+        function colorImg(){ 
+            let img =["/painter.png", "/painter-colored.png"];
+            let painter = document.getElementById('painter');
+            index++;
+            console.log(img[index%1], index)
+            painter.src = img[index%2];
+        }
+    </script>
 </html>

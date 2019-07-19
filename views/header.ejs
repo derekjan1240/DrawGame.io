@@ -1,6 +1,11 @@
 <nav class="nav nav-tabs justify-content-center p-3">
     <a class="nav-link active" href="/">Home</a>
-    <a class="nav-link" href="/login">Create</a>
-    <a class="nav-link" href="/profile">Profile</a>
-    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+    <% if (user) { %>
+        <a class="nav-link" href="/game/create">Create</a>
+        <a class="nav-link" href="/profile">Profile</a>
+        <a class="nav-link" href="/auth/Logout">Logout</a>
+    <% } else { %>
+        <a class="nav-link" href="/login">Login</a>
+    <% } %>
+    <!-- <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
 </nav>

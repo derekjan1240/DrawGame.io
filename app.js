@@ -41,31 +41,23 @@ mongoose.connect(keys.mongodb.dbURI, { useNewUrlParser: true },() => {
 
 // Routes
 const authRoutes = require('./routes/auth-routes');
+const gameRoutes = require('./routes/game-routes.js');
 // Set up routes
 app.use('/auth', authRoutes);
-// app.use('/profile', profileRoutes);
-// app.use('/post', postRoutes);
-// app.use('/user', userRoutes);
-// app.use('/video', videosRoutes);
-// app.use('/course', courseRoutes);
+app.use('/game', gameRoutes);
 
 // create home route
 app.get('/', (req, res) => {
     // res.sendFile(__dirname + '/index.html');
-    console.log(req.user)
-    res.render('home');
+    res.render('home', { user: req.user });
 });
 
 app.get('/login', (req, res) => {
-    res.render('login');
-});
-
-app.get('/game', (req, res) => {
-    res.render('drawGame');
+    res.render('login', { user: req.user });
 });
 
 app.get('/profile', (req, res) => {
-    res.render('profile');
+    req.user?  res.render('profile', { user: req.user }) : res.redirect('/login');
 });
 
 // Creste Server

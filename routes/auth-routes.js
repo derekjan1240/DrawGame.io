@@ -2,6 +2,12 @@ const router = require('express').Router();
 const passport = require('passport');
 // const bcrypt = require('bcrypt-nodejs');
 
+// auth logout
+router.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+});
+
 // auth login
 /* Register */
 router.post('/login', 
