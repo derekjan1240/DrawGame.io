@@ -1,7 +1,8 @@
-<nav class="nav nav-tabs justify-content-center p-3">
+<nav class="nav nav-tabs  p-3">
+    <a class="navbar-brand mr-5" href="/">DrawGame.io</a> 
     <a class="nav-link active" href="/">Home</a>
     <% if (user) { %>
-        <a class="nav-link" href="/game/create">Create</a>
+        <a class="nav-link" href="/game/room/<%= user._id %>">Create</a>
         <a class="nav-link" href="/profile">Profile</a>
         <a class="nav-link" href="/auth/Logout">Logout</a>
     <% } else { %>

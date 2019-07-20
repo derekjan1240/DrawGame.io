@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
-        <link rel="stylesheet" type="text/css" href="login.css"> 
+        <link rel="stylesheet" type="text/css" href="/css/login.css"> 
         <title>DrawGame.io</title>
     </head>
     <body>
@@ -14,22 +14,23 @@
                 <form enctype='application/json' method="POST">
                     <div class="form-group">
                         <label for="InputEmail">Email address</label>
-                        <input type="email" name='username' class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email" required="true">
+                        <input type="email" name='username' class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email" required="true" autocomplete="on">
                         <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                     </div>
                     <div class="form-group">
                         <label for="InputPassword">Password</label>
-                        <input type="password" name='password' class="form-control" id="InputPassword" placeholder="Password" required="true">
+                        <input type="password" name='password' class="form-control" id="InputPassword" placeholder="Password" required="true" autocomplete="off">
                     </div>
                     <button type="submit" class="btn btn-primary" formaction="/auth/login">Login</button>
-                    <button type="submit" class="btn btn-success" formaction="/auth/register">Register</button>
+                    <button type="submit" class="btn btn-success ml-1" formaction="/auth/register">Register</button>
+                    <input class="btn btn-danger ml-1" type="reset" value="Reset" autocomplete="off">
+                    
                     <!-- oauth2.0 -->
-                    <input class="btn btn-danger ml-1" type="reset" value="Reset">
-                    <button id="LoginBtn" type="button" class="btn btn-primary ml-4" style="background: #ea4335;">
-                        Google&nbsp;&nbsp;<i class="fab fa-google fa-lg" style="color: #ffffff;"></i>
+                    <button id="LoginBtn" type="button" class="btn ml-4" style="color:#ffffff; background: #ea4335;">
+                        Google&nbsp;&nbsp;<i class="fab fa-google fa-lg"></i>
                     </button>
-                    <button id="startGameBtn" type="button" class="btn btn-success ml-1" style="background: #00c300;">
-                        Line&nbsp;&nbsp;<i class="fab fa-line fa-lg" style=" color: #ffffff;"></i>
+                    <button id="startGameBtn" type="button" class="btn ml-1" style="color:#ffffff; background: #00c300;">
+                        Line&nbsp;&nbsp;<i class="fab fa-line fa-lg"></i>
                     </button>
                 </form>
                 <!-- <div class="d-flex mt-5">

@@ -3,6 +3,10 @@ body{
     font-family: 'Noto Sans TC';
 }
 
+i{
+    color: #ffffff;
+}
+
 #loginSection{
     width: 50vw; 
     padding-top: 10vh;

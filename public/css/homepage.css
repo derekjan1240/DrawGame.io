@@ -3,9 +3,18 @@ body{
     font-family: 'Noto Sans TC';
 }
 
+img{
+    border-radius: 0.3rem;
+}
+
+.input-group{
+    width: 40vw;
+}
+
 #preGameSection{
     width: 60vw; 
-    padding-top: 10vh;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
 }
 
 #preGame{
