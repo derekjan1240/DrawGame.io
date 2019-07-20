@@ -21,11 +21,10 @@ passport.deserializeUser((id, done) => {
 passport.use('register', 
     new LocalStrategy( 
         (username, password, done) => {
-            console.log('new LocalStrategy register')
             User.findOne({email: username}).then((currentUser) => {
                 if(currentUser){
                     // Account already exists
-                    return done(null, false);
+                    return done(null, false, { message: 'Account already exists.' });
                 }else{
                     new User({
                         username: username,
@@ -38,6 +37,24 @@ passport.use('register',
                         // Mailer(newUser.email, newUser._id);
                         done(null, newUser);
                     });
+                }
+            });
+        }
+));
+
+passport.use('login', 
+    new LocalStrategy( 
+        (username, password, done) => {
+            User.findOne({email: username}).then((dbUser) => {
+                if(dbUser){
+                    // Account already exists
+                    if(dbUser.password == password){
+                        done(null, dbUser);
+                    }else{
+                        return done(null, false, { message: 'Password Wrong!.' }); 
+                    }
+                }else{
+                    return done(null, false, { message: 'Can not find the username!.' });
                 }
             });
         }

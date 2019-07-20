@@ -10,19 +10,34 @@ router.get('/logout', (req, res) => {
 
 // auth login
 /* Register */
-router.post('/login', 
-    passport.authenticate('signin', { 
-  		successRedirect : '/profile',
-   		failureRedirect: '/login' 
-	})
-);
+router.post('/login', (req, res, next)=>{
+    passport.authenticate('login', (err, user, options) => {
+        if (err) { return next(err); }
+        if (!user) { 
+            console.log(options) 
+            return res.redirect('/login'); 
+        }
+        req.logIn(user, (err) =>{
+            if (err) { return next(err); }
+            return res.redirect('/profile');
+        });
+    })(req, res, next);
+});
 
-router.post('/register', 
-    passport.authenticate('register', { 
-  		successRedirect : '/profile',
-   		failureRedirect: '/login' 
-	})
-);
+router.post('/register',(req, res, next)=>{
+    passport.authenticate('register', (err, user, options) => {
+        if (err) { return next(err); }
+        if (!user) { 
+            console.log(options) 
+            return res.redirect('/login'); 
+        }
+        req.logIn(user, (err) =>{
+            if (err) { return next(err); }
+            return res.redirect('/profile');
+        });
+    })(req, res, next);
+});
+
 /* Login */
 // local 
 // oauth 2.0 
