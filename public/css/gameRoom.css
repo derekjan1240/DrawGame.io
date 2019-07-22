@@ -1,3 +1,45 @@
-body{
-    background: rgb(207, 241, 255);
+/* preSection */
+#ownSection{
+    border-radius: 1.5rem;
+    background: #ffeaa7;
+}
+
+#opponentSection{
+    border-radius: 1.5rem;
+    background: #ffeaa7;
+}
+
+.thumbnail{
+    width: 18vw;
+}
+
+.nonDisplayBtn{
+    display: none;
+}
+
+.nonDisplaySection{
+    display: none;
+}
+
+/* gameSection */
+canvas { 
+    border: 1px solid black;
+    background: white;
+}
+
+#opponentSketchpad{
+    width: 100%;
+    height: 100%;
+}
+
+#playerB { 
+    width: 40vw;
+    height: 50vh; 
+    border: 1px solid black;
+    background: white;
+}
+
+#gameSection{
+    background: #ffeaa7;
+    border-radius: 1.5rem;
 }

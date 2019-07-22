@@ -1,11 +1,26 @@
 const router = require('express').Router();
 
+router.get('/room/:id', (req, res) => {
+    
+    if(req.user){
+        res.render('gameRoom', { user: req.user }); 
+    }else{
+        res.render('login', { user: req.user });
+    }
+    
+});
+
 router.get('/', (req, res) => {
+
+    // if(req.user){
+    //     res.render('gameRoom', { user: req.user }); 
+    // }else{
+    //     res.render('drawGame', { user: req.user });
+    // }
+
     res.render('drawGame', { user: req.user });
 });
 
-router.get('/create', (req, res) => {
-    req.user?  res.render('gameRoom', { user: req.user }) : res.redirect('/login');
-});
+
 
 module.exports = router;

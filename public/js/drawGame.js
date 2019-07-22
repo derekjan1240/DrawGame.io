@@ -1,5 +1,5 @@
 // alert('connect');
-var socket = io();
+var socket = io({autoConnect: false});
 var canvas, ctx;
 var mouseX, mouseY, mouseDown = 0,
     lastX, lastY;
@@ -20,7 +20,7 @@ window.onload = function(){
 function scyncSketchapad(){
     canvas = document.getElementById('Sketchpad');
     let dataURL = canvas.toDataURL();
-    socket.emit('passPicToServer', { data: dataURL});
+    socket.emit('passPicToServerP', { data: dataURL});
     setTimeout(()=>{
         scyncSketchapad()
     },200)
@@ -56,6 +56,19 @@ function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+function connect(){
+    socket.open();
+    socket.emit('showConnectedPeople');
+    document.getElementById('disconnect').classList.remove("nonDisplayBtn");
+    document.getElementById('connect').classList.add("nonDisplayBtn");
+}
+
+function disconnect(){
+    socket.close();
+    document.getElementById('connect').classList.remove("nonDisplayBtn");
+    document.getElementById('disconnect').classList.add("nonDisplayBtn");
+}
+
 function onMouseUp() {
     // console.log(`onMouseUp()\nlastX:${lastX} lastY:${lastY}`)
     mouseDown = 0;
@@ -81,7 +94,7 @@ function getMousePos(e) {
         mouseY = e.offsetY
     }
     else if (e.layerX) {
-        alert('!')
+        // alert('!')
         console.log('layer')
         console.log(e.layerX, e.layerY)
         mouseX = e.layerX
