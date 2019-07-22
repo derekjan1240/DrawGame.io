@@ -15,6 +15,11 @@ fetch('/data/user')
       console.log(err);
   });
 
+socket.on('illegalCreateRoom', (data)=>{
+    alert(data.msg)
+    window.location = "/";
+})
+
 socket.on('RoomIsFull', (data)=>{
     alert(data.msg)
     window.location = "/";
@@ -28,6 +33,27 @@ socket.on('opponentJoin', (data)=>{
 socket.on('hostInfoSet',(data)=>{
     document.getElementById('opponentName').innerHTML = data.hostInfo.username;
 })
+
+socket.on('checkRoom',()=>{
+    checkOpponentStillAtRoom();
+})
+
+socket.on('hostLeave',()=>{
+    console.log('hostLeave');
+    window.location = `/game/room/${userInfo._id}`;
+})
+
+socket.on('opponentLeave',()=>{
+    console.log('oppLeave');
+    document.getElementById('opponentName').innerHTML = "Waitting ...";
+})
+
+// socket.on('checkAgainLater',()=>{
+//     console.log('no one leave!')
+    // setTimeout(()=>{
+    //     checkOpponentStillAtRoom();
+    // },5000)
+// })
 
 socket.on('opponentReady', ()=>{
     console.log('opponentReady')
@@ -50,6 +76,7 @@ function getReady(){
     document.getElementById('ReadyBtn').classList.add("nonDisplayBtn");
     socket.emit('getReady', {roomName: roomID});
     checkReady();
+    socket.emit('startCheckRoom', {roomName: roomID});
 }
 
 function offReady(){
@@ -66,6 +93,11 @@ function checkReady(){
         // start game
         startGame()
     }
+}
+
+function checkOpponentStillAtRoom(){
+    console.log('checkOpponentStillAtRoom!')
+    socket.emit('checkOpponentStillAtRoom', {roomName: roomID, user: userInfo});
 }
 
 function startGame(){

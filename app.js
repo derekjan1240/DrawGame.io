@@ -113,10 +113,18 @@ io.on('connection', (socket)=> {
         io.of('/').in(data.roomName).clients((error, clients) => {
             if (error) throw error;
             if(clients.length<2){
-                socket.join(data.roomName);
-                // opponentJoin
-                if(data.roomName != data.user._id){
-                    socket.in(data.roomName).broadcast.emit('opponentJoin', {opponentInfo: data.user});
+                if(clients.length==0 && data.roomName != data.user._id){
+                    // Create other person room
+                    socket.emit('illegalCreateRoom', { msg: 'The room is not exist!' });
+                }else if(clients.length == 1 && data.roomName == data.user._id){
+                    // Same person create two room
+                    socket.emit('illegalCreateRoom', { msg: 'You can,t create two rooms at the same time!' });
+                }else{
+                   socket.join(data.roomName);
+                    // opponentJoin
+                    if(data.roomName != data.user._id){
+                        socket.in(data.roomName).broadcast.emit('opponentJoin', {opponentInfo: data.user});
+                    } 
                 }
             }else{
                 // The room is full
@@ -135,6 +143,25 @@ io.on('connection', (socket)=> {
 
     socket.on('offReady',(data)=>{
         socket.in(data.roomName).broadcast.emit('opponentOffReady');
+    })
+
+    socket.on('startCheckRoom',(data)=>{
+        io.sockets.in(data.roomName).emit('checkRoom');
+    })
+
+    socket.on('checkOpponentStillAtRoom',(data)=>{
+        io.of('/').in(data.roomName).clients((error, clients) => {
+            if (error) throw error;
+            if(clients.length<2){
+                if(data.roomName != data.user._id){
+                    // Host leave
+                    socket.emit('hostLeave');
+                }else{
+                    // Opponent leave
+                    socket.emit('opponentLeave');
+                }
+            }
+        })
     })
 
     socket.on('passPicToServer', (data)=>{
