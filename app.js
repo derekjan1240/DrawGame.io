@@ -73,6 +73,7 @@ const io = socket(server);
 io.on('connection', (socket)=> {
     console.log('made socket connection', socket.id);
     
+    // Check Clients
     socket.on('showConnectedPeople',()=>{
         io.of('/').clients((error, clients) => {
             if (error) throw error;
@@ -87,11 +88,27 @@ io.on('connection', (socket)=> {
         });
     })
 
+    // home
+    socket.on('findRoom', (data)=>{
+        io.of('/').in(data.roomName).clients((error, clients) => {
+            if (error) throw error;
+            if(clients.length==1){
+                socket.emit('findTrue', {url:`/game/room/${data.roomName}`});
+            }else if(clients.length>1){
+                socket.emit('findFalse', {msg:'Room is full!'});
+            }else{
+                socket.emit('findFalse', {msg:'Can not find the room!'});
+            }
+        })
+    });
+
+    // drawGame
     socket.on('passPicToServerP', (data)=>{
         // io.emit('getPic', {pic: data});
         socket.broadcast.emit('getPic', {pic: data});
     });
 
+    // gameRoom
     socket.on('joinRoom', (data)=>{
         io.of('/').in(data.roomName).clients((error, clients) => {
             if (error) throw error;
