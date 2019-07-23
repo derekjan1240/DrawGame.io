@@ -160,6 +160,8 @@ io.on('connection', (socket)=> {
                     // Opponent leave
                     socket.emit('opponentLeave');
                 }
+            }else{
+                socket.emit('checkRoom');
             }
         })
     })
