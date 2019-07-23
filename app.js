@@ -104,9 +104,12 @@ io.on('connection', (socket)=> {
 
     // drawGame
     socket.on('passPicToServerP', (data)=>{
-        // io.emit('getPic', {pic: data});
-        socket.broadcast.emit('getPic', {pic: data});
+        io.emit('getPic', {pic: data});
     });
+
+    socket.on('clearCanvas',()=>{
+        io.emit('resetSketchpad');
+    })
 
     // gameRoom
     socket.on('joinRoom', (data)=>{

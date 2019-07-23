@@ -1,24 +1,30 @@
-// alert('connect');
-var socket = io({autoConnect: false});
-var canvas, ctx;
-var mouseX, mouseY, mouseDown = 0,
+const socket = io({autoConnect: false});
+let canvas, ctx;
+let mouseX, mouseY, mouseDown = 0,
     lastX, lastY;
+let penColor = '#000000', penSize=2;
 
 socket.on('getPic', (dataURL) =>{
-    // console.log(dataURL.pic.data);
-    document.getElementById('image').src= dataURL.pic.data;
+    var img = new Image;
+    img.onload = function(){
+        ctx.globalCompositeOperation = 'lighter';      
+        ctx.drawImage(img, 0, 0);                         
+    };
+    img.src = dataURL.pic.data;
 });
+
+socket.on('resetSketchpad',()=>{
+    ctx.fillStyle = '#ffffff'
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+})
 
 window.onload = function(){
     init();
 }
 
-// join game room
-// socket.emit('join', roomNum);
-
 /* socket handle */
 function scyncSketchapad(){
-    canvas = document.getElementById('Sketchpad');
+    // canvas = document.getElementById('Sketchpad');
     let dataURL = canvas.toDataURL();
     socket.emit('passPicToServerP', { data: dataURL});
     setTimeout(()=>{
@@ -27,23 +33,33 @@ function scyncSketchapad(){
 }
 
 /* Draw Function */ 
+function setEraser(){
+    penColor = "#ffffff";
+    penSize = 4;
+}
+
+function setPencil(){
+    penColor = "#000000";
+    penSize = 2;
+}
+
 function onMouseDown() {
     mouseDown = 1
-    draw(ctx, mouseX, mouseY, 2)
+    draw(ctx, mouseX, mouseY, penSize)
 }
 
 function draw(ctx,x,y,size) {
-    // console.log(`x:${x} y:${y} lastX:${lastX} lastY:${lastY}`)
     // 解決連續筆觸
     if (lastX && lastY && (x !== lastX || y !== lastY)) {
-        ctx.fillStyle = "#000000";
+        ctx.strokeStyle = penColor;
+        ctx.fillStyle = penColor;
         ctx.lineWidth = 2 * size;
         ctx.beginPath();
         ctx.moveTo(lastX, lastY);
         ctx.lineTo(x, y);
         ctx.stroke();
     }
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = penColor;
     ctx.beginPath();
     ctx.arc(x, y, size, 0, Math.PI*2, true);
     ctx.closePath();
@@ -53,7 +69,7 @@ function draw(ctx,x,y,size) {
 }
 
 function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    socket.emit('clearCanvas');
 }
 
 function connect(){
@@ -70,7 +86,6 @@ function disconnect(){
 }
 
 function onMouseUp() {
-    // console.log(`onMouseUp()\nlastX:${lastX} lastY:${lastY}`)
     mouseDown = 0;
     lastX = 0;
     lastY = 0;
@@ -84,33 +99,24 @@ function onMouseMove(e) {
 }
 
 function getMousePos(e) {
-    // console.log(`e:${e}`)
     if (!e)
         var e = event
     if (e.offsetX) {
-        // console.log('offset')
-        // console.log(e.offsetX, e.offsetY)
         mouseX = e.offsetX
         mouseY = e.offsetY
     }
     else if (e.layerX) {
-        // alert('!')
-        console.log('layer')
-        console.log(e.layerX, e.layerY)
         mouseX = e.layerX
         mouseY = e.layerY
     }
  }
 
 function init() {
-    canvas = document.getElementById('Sketchpad');
-    ctx = canvas.getContext('2d')
-    canvas.addEventListener('mousedown', onMouseDown, false)
-    canvas.addEventListener('mousemove', onMouseMove, false)
-    window.addEventListener('mouseup', onMouseUp, false)
-    // setCanvasSize
-    canvas.height = window.innerHeight*0.5;
-    canvas.width = window.innerWidth*0.4;
+    canvas = document.getElementById('Sketchpad');;
+    ctx = canvas.getContext('2d')                             
+    canvas.addEventListener('mousedown', onMouseDown, false);
+    canvas.addEventListener('mousemove', onMouseMove, false);
+    window.addEventListener('mouseup', onMouseUp, false);
     // scyncCanvas
     scyncSketchapad();
 }
