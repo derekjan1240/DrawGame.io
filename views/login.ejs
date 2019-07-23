@@ -21,17 +21,18 @@
                         <label for="InputPassword">Password</label>
                         <input type="password" name='password' class="form-control" id="InputPassword" placeholder="Password" required="true" autocomplete="off">
                     </div>
+                    <p id="errMsg" style="color: #eb4d4b; font-weight:bold;"><%= erroMsg %></p>
                     <button type="submit" class="btn btn-primary" formaction="/auth/login">Login</button>
                     <button type="submit" class="btn btn-success ml-1" formaction="/auth/register">Register</button>
                     <input class="btn btn-danger ml-1" type="reset" value="Reset" autocomplete="off">
                     
                     <!-- oauth2.0 -->
-                    <button id="LoginBtn" type="button" class="btn ml-4" style="color:#ffffff; background: #ea4335;">
+                    <a id="LoginBtn" class="btn ml-4" style="color:#ffffff; background: #ea4335;" href="/auth/google">
                         Google&nbsp;&nbsp;<i class="fab fa-google fa-lg"></i>
-                    </button>
-                    <button id="startGameBtn" type="button" class="btn ml-1" style="color:#ffffff; background: #00c300;">
+                    </a>
+                    <a id="startGameBtn" class="btn ml-1" style="color:#ffffff; background: #00c300;" href="/auth/line">
                         Line&nbsp;&nbsp;<i class="fab fa-line fa-lg"></i>
-                    </button>
+                    </a>
                 </form>
                 <!-- <div class="d-flex mt-5">
                     <span style="font-size: 48px; color: #ea4335;">

@@ -10,9 +10,9 @@
         <div id="profileSection" class="d-flex flex-column text-center m-3">
             <div class="d-flex justify-content-center p-3">
                 <% if (user.thumbnail) { %>
-                    <img src="<%= user.thumbnail %>"/>
+                    <img src="<%= user.thumbnail %>" style="max-width: 20vw"/>
                 <% }else{ %>
-                    <img src="/pic/defult-thumbnail.png"/>
+                    <img src="/pic/defult-thumbnail.png" style="max-width: 20vw"/>
                 <% } %>    
             </div>
             <div id="formSection" class="d-flex justify-content-center p-3">

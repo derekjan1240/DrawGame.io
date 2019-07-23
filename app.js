@@ -20,7 +20,7 @@ app.use(express.static('public'));
 
 // session 
 app.use(session({
-    secret: 'your secret key',
+    secret: keys.session.secret,
     resave: false,
     saveUninitialized: false,
     cookie: { 
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('login', { user: req.user });
+    res.render('login', { user: req.user, erroMsg:'' });
 });
 
 app.get('/profile', (req, res) => {
