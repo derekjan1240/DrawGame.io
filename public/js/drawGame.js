@@ -14,7 +14,6 @@ socket.on('getPic', (dataURL) =>{
 });
 
 socket.on('resetSketchpad',()=>{
-    ctx.fillStyle = '#ffffff'
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 })
 
@@ -69,7 +68,8 @@ function draw(ctx,x,y,size) {
 }
 
 function clearCanvas() {
-    socket.emit('clearCanvas');
+    console.log(socket.connected)
+    socket.connected? socket.emit('clearCanvas') : ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function connect(){
