@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const passport = require('passport');
 // const bcrypt = require('bcrypt-nodejs');
+// DB Model
+const User = require('../models/user-model');
 
 // auth logout
 router.get('/logout', (req, res) => {
@@ -10,20 +12,6 @@ router.get('/logout', (req, res) => {
 
 // auth login
 /* Register */
-router.post('/login', (req, res, next)=>{
-    passport.authenticate('login', (err, user, options) => {
-        if (err) { return next(err); }
-        if (!user) { 
-            console.log(options) 
-            return res.render('login', { user: null, erroMsg: '> Account or Password incorrect!'});
-        }
-        req.logIn(user, (err) =>{
-            if (err) { return next(err); }
-            return res.redirect('/profile');
-        });
-    })(req, res, next);
-});
-
 router.post('/register',(req, res, next)=>{
     passport.authenticate('register', (err, user, options) => {
         if (err) { return next(err); }
@@ -38,8 +26,53 @@ router.post('/register',(req, res, next)=>{
     })(req, res, next);
 });
 
+/* Modify */
+router.post('/modify',(req, res)=>{
+    if(!req.user){
+        res.redirect('/login');
+    }else{
+        if(req.body.newPassword != req.body.newPasswordcheck){
+            res.redirect('/profile');
+        }else{
+            if(req.body.newPassword){
+                // modify password
+                User.findOneAndUpdate(
+                    { email: req.user.email, password: req.body.oldPassword }, { password: req.body.newPassword }, {new: true}, (err, updatateUser)=> {
+                        if(err) {console.log(err)}
+                        console.log('> update user(password): ', updatateUser);
+                        res.redirect('/profile');
+                });
+            }
+            if(req.body.username){
+                // modify username
+                User.findOneAndUpdate(
+                    { email: req.user.email}, { username: req.body.username }, {new: true}, (err, updatateUser)=> {
+                        if(err) {console.log(err)}
+                        console.log('> update user(username): ', updatateUser);
+                        res.redirect('/profile');
+                });
+            }
+        }
+    }
+    
+});
+
 /* Login */
 // local 
+router.post('/login', (req, res, next)=>{
+    passport.authenticate('login', (err, user, options) => {
+        if (err) { return next(err); }
+        if (!user) { 
+            console.log(options) 
+            return res.render('login', { user: null, erroMsg: '> Account or Password incorrect!'});
+        }
+        req.logIn(user, (err) =>{
+            if (err) { return next(err); }
+            return res.redirect('/profile');
+        });
+    })(req, res, next);
+});
+
 // oauth 2.0 
 router.get('/google', passport.authenticate('google', {
     scope: ['profile','email']

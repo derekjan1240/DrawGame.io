@@ -35,9 +35,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // connect to mongodb
-mongoose.connect(keys.mongodb.dbURI, { useNewUrlParser: true },() => {
-    console.log('connected to mongodb');
-});
+mongoose.connect(keys.mongodb.dbURI, { useNewUrlParser: true, connectTimeoutMS: 5000, useFindAndModify: false}).then(
+    () => { console.log('connected to mongodb'); },
+    err => { console.log(err); }
+  );
 
 // Routes
 const authRoutes = require('./routes/auth-routes');

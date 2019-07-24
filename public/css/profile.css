@@ -1,0 +1,8 @@
+img{
+    max-width: 18vw;
+    border-radius: 0.3em
+}
+
+.nonDisplay{
+    display: none;
+}
