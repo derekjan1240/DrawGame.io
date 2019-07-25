@@ -32,9 +32,6 @@ passport.use('register',
                     // Account already exists
                     done(null, false, { message: '> Account already exists.' });
                 }else{
-                    // console.log('Pswd(before):', password);
-                    // console.log('Pswd(after):', hash);
-                    // console.log(bcrypt.compareSync(password, hash));
                     new User({
                         username: username,
                         email: username,
