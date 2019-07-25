@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const passport = require('passport');
-// const bcrypt = require('bcrypt-nodejs');
 // DB Model
 const User = require('../models/user-model');
+// Bcrypt 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 // auth logout
 router.get('/logout', (req, res) => {
@@ -36,12 +38,15 @@ router.post('/modify',(req, res)=>{
         }else{
             if(req.body.newPassword){
                 // modify password
-                User.findOneAndUpdate(
-                    { email: req.user.email, password: req.body.oldPassword }, { password: req.body.newPassword }, {new: true}, (err, updatateUser)=> {
-                        if(err) {console.log(err)}
-                        console.log('> update user(password): ', updatateUser);
-                        res.redirect('/profile');
-                });
+                User.findOne({email: req.user.email}).then((currentUser)=>{
+                    if(bcrypt.compareSync(req.body.oldPassword, currentUser.password)){
+                        currentUser.password = bcrypt.hashSync(req.body.newPassword, saltRounds);
+                        currentUser.save().then((updateUser) => {
+                            console.log('> update user(password): ', updateUser);
+                            res.redirect('/profile');
+                        });
+                    }
+                })
             }
             if(req.body.username){
                 // modify username

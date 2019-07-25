@@ -8,6 +8,9 @@ const LineStrategy = require('passport-line-auth').Strategy;
 const keys = require('./keys');
 // DB Model
 const User = require('../models/user-model');
+// Bcrypt 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 /* serialize */
 passport.serializeUser((user, done) => {
@@ -29,11 +32,13 @@ passport.use('register',
                     // Account already exists
                     done(null, false, { message: '> Account already exists.' });
                 }else{
+                    // console.log('Pswd(before):', password);
+                    // console.log('Pswd(after):', hash);
+                    // console.log(bcrypt.compareSync(password, hash));
                     new User({
                         username: username,
                         email: username,
-                        password: password
-                        // password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null), // encrypt 
+                        password: bcrypt.hashSync(password, saltRounds)
                     }).save().then((newUser) => {
                         console.log('> created new user: ', newUser);
                         // Send varify email
@@ -51,9 +56,10 @@ passport.use('login',
             User.findOne({email: username}).then((dbUser) => {
                 if(dbUser){
                     // Account already exists
-                    if(dbUser.password == password){
+                    if(bcrypt.compareSync(password, dbUser.password)){
                         done(null, dbUser);
                     }else{
+                        console.log(dbUser.password, bcrypt.hashSync(password, saltRounds))
                         done(null, false, { message: '> Password Wrong!.' }); 
                     }
                 }else{
@@ -97,8 +103,7 @@ passport.use(
                 new User({
                     username: profile._json.name,
                     email: profile._json.email,
-                    password: '0000',  //temp
-                    // password: bcrypt.hashSync('0000', bcrypt.genSaltSync(10), null),
+                    password: '0000',  //temp psw
                     active: true,
                     googleId: profile.id,
                     thumbnail: profile._json.picture
@@ -149,7 +154,6 @@ passport.use('line',
                         new User({
                             username: profileDecode.name,
                             email: profileDecode.email,
-                            // password: bcrypt.hashSync('0000', bcrypt.genSaltSync(10), null),
                             password: '0000', //temp
                             active:true,
                             lineId: profileDecode.sub,
