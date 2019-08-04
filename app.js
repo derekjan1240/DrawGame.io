@@ -206,6 +206,10 @@ io.on('connection', (socket)=> {
         socket.in(data.roomName).broadcast.emit('getPic', {pic: data.pic});
     });
 
+    socket.on('gameRoundOver',(data)=>{
+        socket.in(data.roomName).broadcast.emit('losing');
+    })
+
     // socket.emit('request', /* */); // emit an event to the socket
     // io.emit('broadcast', /* */); // emit an event to all connected sockets
     // socket.on('reply', function(){ /* */ }); // listen to the event

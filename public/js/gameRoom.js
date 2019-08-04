@@ -2,7 +2,9 @@
 const socket = io();
 const roomID = window.location.pathname.split("/")[3];
 let userInfo = null;
+let oppInfo = null;
 let readyNum = 0;
+let isGmaeStart = false;
 
 // Get userInfo and Join Room
 fetch('/data/user')
@@ -26,12 +28,14 @@ socket.on('RoomIsFull', (data)=>{
 })
 
 socket.on('opponentJoin', (data)=>{
+    oppInfo = data;
     document.getElementById('opponentName').innerHTML = data.opponentInfo.username;
     document.getElementById('opponentImg').src = data.opponentInfo.thumbnail;
     socket.emit('passHostInfoToOpponent', {roomName: roomID, user: userInfo});
 })
 
 socket.on('hostInfoSet',(data)=>{
+    oppInfo = data;
     document.getElementById('opponentName').innerHTML = data.hostInfo.username;
     document.getElementById('opponentImg').src = data.hostInfo.thumbnail;
     socket.emit('startCheckRoom', {roomName: roomID});
@@ -43,12 +47,23 @@ socket.on('checkRoom',()=>{
 
 socket.on('hostLeave',()=>{
     console.log('hostLeave');
+    if(isGmaeStart){
+        // Opponent win
+        console.log('Opp win');
+        roundOver(oppInfo, userInfo);
+    }
+    // Became room host
     window.location = `/game/room/${userInfo._id}`;
 })
 
 socket.on('opponentLeave',()=>{
-    // console.log('oppLeave');
+    console.log('oppLeave');
     document.getElementById('opponentName').innerHTML = "Waitting ...";
+    if(isGmaeStart){
+        // Host win
+        console.log('Host win');
+        roundOver(userInfo, oppInfo);
+    }
 })
 
 socket.on('opponentReady', ()=>{
@@ -63,6 +78,12 @@ socket.on('opponentOffReady', ()=>{
     readyNum--;
     document.getElementById('opponentSection').style.background='#ffeaa7';
     document.getElementById('opponentBtn').textContent = 'Clear';
+})
+
+socket.on('losing',()=>{
+    clearTimeout(winnerCheck);
+    console.log('You loss!');
+    roundOver(oppInfo, userInfo);
 })
 
 function getReady(){
@@ -98,6 +119,7 @@ function checkOpponentStillAtRoom(){
 function startGame(){
     document.getElementById('gameSection').classList.remove("nonDisplaySection");
     document.getElementById('preGameSection').classList.add("nonDisplaySection");
+    isGmaeStart = true;
     initGame();
 }
 
@@ -203,4 +225,50 @@ function initGame() {
     canvas.width = window.innerWidth*0.4;
     // scyncCanvas
     scyncSketchapad();
+    // checkWinner
+    checkWinner();
+}
+
+function checkWinner(){
+    let isOver = AI_Judge_Function(); //score>k => true(winning)
+    
+    console.log('AI Check winner!', isOver);
+    if(isOver){
+        // You win
+        socket.emit('gameRoundOver',{roomName: roomID});
+        console.log('You win!')
+        roundOver(userInfo, oppInfo);
+
+    }else{
+        winnerCheck = setTimeout(()=>{
+            checkWinner();
+        }, 1000)
+    }
+}
+
+function roundOver(winner, losser){
+    console.log('w:', winner);
+    // record setting!
+    // .........
+    // .........
+    // .........
+    // .........
+    resetRoom()
+}
+
+function resetRoom(){
+    offReady()
+    document.getElementById('gameSection').classList.add("nonDisplaySection");
+    document.getElementById('preGameSection').classList.remove("nonDisplaySection");
+    isGmaeStart = false;
+}
+
+function AI_Judge_Function(){
+    // sent pic to network score>k trigger winning!
+    let temp = Math.floor(Math.random()*10);
+    if(temp==5){
+        return true;
+    }else{
+        return false;
+    }
 }
