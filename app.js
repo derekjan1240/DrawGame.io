@@ -1,4 +1,6 @@
 const express = require('express');
+const fs = require('fs');
+const ndjson = require('ndjson');
 const socket = require('socket.io');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -62,6 +64,36 @@ app.get('/login', (req, res) => {
 app.get('/profile', (req, res) => {
     req.user?  res.render('profile', { user: req.user }) : res.redirect('/login');
 });
+
+app.get('/quickdraw/:title',(req, res)=>{
+    res.render('quickDraw');
+});
+
+app.get('/quickdrawDataStreaming/:picTitle', (req, res)=>{
+    streaming(req.params.picTitle).then((drawing)=>{
+        // console.log(drawing.length)
+        const index = Math.floor(Math.random()* drawing.length);
+        // res.send(drawing[index]); 
+        res.send(drawing);  
+    }).catch((err)=>{
+        res.send(null); 
+    })
+});
+
+function streaming(picTitle){
+    let drawing =[];
+    return new Promise((resoive, reject)=>{
+        fs.createReadStream(`./public/drawPic/${picTitle}.ndjson`)
+        .on('error', (err)=>{
+            reject(err)
+        })
+        .pipe(ndjson.parse())
+        .on('data', (obj) => {
+            drawing.push(obj);
+            resoive(drawing);
+        })
+    })
+}
 
 // Creste Server
 const server = app.listen(3000, ()=>{
