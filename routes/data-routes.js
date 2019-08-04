@@ -14,10 +14,12 @@ const authCheck = (req, res, next) => {
 };
 
 router.get('/user', authCheck, (req, res) => {
-    res.json(req.user);
+    const data = {
+        _id : req.user._id,
+        username: req.user.username,
+        thumbnail: req.user.thumbnail
+    }
+    res.json(data);
 });
-
-
-
 
 module.exports = router;
