@@ -5,7 +5,7 @@ router.get('/room/:id', (req, res) => {
     if(req.user){
         res.render('gameRoom', { user: req.user }); 
     }else{
-        res.render('login', { user: req.user });
+        res.render('login', { user: req.user , erroMsg: null});
     }
     
 });

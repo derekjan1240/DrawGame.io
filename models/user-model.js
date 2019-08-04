@@ -15,7 +15,10 @@ const userSchema = new Schema({
     },
     googleId: String,
     lineId: String,
-    thumbnail: String,
+    thumbnail: {
+        type: String,
+        default: '/pic/defult-thumbnail.png'
+    },
     active:{
         type: Boolean,
         default: false

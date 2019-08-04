@@ -27,11 +27,13 @@ socket.on('RoomIsFull', (data)=>{
 
 socket.on('opponentJoin', (data)=>{
     document.getElementById('opponentName').innerHTML = data.opponentInfo.username;
+    document.getElementById('opponentImg').src = data.opponentInfo.thumbnail;
     socket.emit('passHostInfoToOpponent', {roomName: roomID, user: userInfo});
 })
 
 socket.on('hostInfoSet',(data)=>{
     document.getElementById('opponentName').innerHTML = data.hostInfo.username;
+    document.getElementById('opponentImg').src = data.hostInfo.thumbnail;
     socket.emit('startCheckRoom', {roomName: roomID});
 })
 
@@ -45,12 +47,12 @@ socket.on('hostLeave',()=>{
 })
 
 socket.on('opponentLeave',()=>{
-    console.log('oppLeave');
+    // console.log('oppLeave');
     document.getElementById('opponentName').innerHTML = "Waitting ...";
 })
 
 socket.on('opponentReady', ()=>{
-    console.log('opponentReady')
+    // console.log('opponentReady')
     readyNum++;
     document.getElementById('opponentSection').style.background='#78e08f';
     document.getElementById('opponentBtn').textContent = 'Unlock';
@@ -81,7 +83,7 @@ function offReady(){
 }
 
 function checkReady(){
-    console.log('readyNum:', readyNum)
+    // console.log('readyNum:', readyNum)
     if(readyNum==2){
         // start game
         startGame()
@@ -89,7 +91,7 @@ function checkReady(){
 }
 
 function checkOpponentStillAtRoom(){
-    console.log('checkOpponentStillAtRoom!')
+    // console.log('checkOpponentStillAtRoom!')
     socket.emit('checkOpponentStillAtRoom', {roomName: roomID, user: userInfo});
 }
 
