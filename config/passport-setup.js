@@ -34,6 +34,7 @@ passport.use('register',
                 }else{
                     new User({
                         username: username,
+                        timestamp: new Date().constructor(),
                         email: username,
                         password: bcrypt.hashSync(password, saltRounds)
                     }).save().then((newUser) => {

@@ -19,6 +19,7 @@ const userSchema = new Schema({
         type: String,
         default: '/pic/defult-thumbnail.png'
     },
+    timestamp: String,
     active:{
         type: Boolean,
         default: false
