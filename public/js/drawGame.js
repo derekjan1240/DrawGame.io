@@ -5,7 +5,7 @@ let mouseX, mouseY, mouseDown = 0,
 let penColor = '#000000', penSize=2;
 
 socket.on('getPic', (dataURL) =>{
-    var img = new Image;
+    let img = new Image;
     img.onload = function(){
         ctx.globalCompositeOperation = 'lighter';      
         ctx.drawImage(img, 0, 0);                         
@@ -23,11 +23,10 @@ window.onload = function(){
 
 /* socket handle */
 function scyncSketchapad(){
-    // canvas = document.getElementById('Sketchpad');
     let dataURL = canvas.toDataURL();
     socket.emit('passPicToServerP', { data: dataURL});
     setTimeout(()=>{
-        scyncSketchapad()
+        socket.connected? scyncSketchapad(): null;
     },200)
 }
 
@@ -68,13 +67,16 @@ function draw(ctx,x,y,size) {
 }
 
 function clearCanvas() {
-    console.log(socket.connected)
     socket.connected? socket.emit('clearCanvas') : ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function connect(){
     socket.open();
     socket.emit('showConnectedPeople');
+    // Reset Sketchapad
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    // scyncCanvas
+    scyncSketchapad();
     document.getElementById('disconnect').classList.remove("nonDisplayBtn");
     document.getElementById('connect').classList.add("nonDisplayBtn");
 }
@@ -83,6 +85,9 @@ function disconnect(){
     socket.close();
     document.getElementById('connect').classList.remove("nonDisplayBtn");
     document.getElementById('disconnect').classList.add("nonDisplayBtn");
+    // Reset Sketchapad
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 }
 
 function onMouseUp() {
@@ -117,6 +122,4 @@ function init() {
     canvas.addEventListener('mousedown', onMouseDown, false);
     canvas.addEventListener('mousemove', onMouseMove, false);
     window.addEventListener('mouseup', onMouseUp, false);
-    // scyncCanvas
-    scyncSketchapad();
 }
