@@ -26,16 +26,18 @@ socket.on('RoomIsFull', (data)=>{
     alert(data.msg)
     window.location = "/";
 })
-
+// When you are host
 socket.on('opponentJoin', (data)=>{
-    oppInfo = data;
+    // console.log('opponentJoin');
+    oppInfo = data.opponentInfo;
     document.getElementById('opponentName').innerHTML = data.opponentInfo.username;
     document.getElementById('opponentImg').src = data.opponentInfo.thumbnail;
     socket.emit('passHostInfoToOpponent', {roomName: roomID, user: userInfo});
 })
-
+// When you are guest
 socket.on('hostInfoSet',(data)=>{
-    oppInfo = data;
+    // console.log('hostInfoSet');
+    oppInfo = data.hostInfo;
     document.getElementById('opponentName').innerHTML = data.hostInfo.username;
     document.getElementById('opponentImg').src = data.hostInfo.thumbnail;
     socket.emit('startCheckRoom', {roomName: roomID});
@@ -124,8 +126,8 @@ function startGame(){
 }
 
 // -----------------------------------
-var canvas, ctx;
-var mouseX, mouseY, mouseDown = 0,
+let canvas, ctx;
+let mouseX, mouseY, mouseDown = 0,
     lastX, lastY;
 
 socket.on('getPic', (dataURL) =>{
@@ -229,13 +231,23 @@ function initGame() {
     checkWinner();
 }
 
+function AI_Judge_Function(){
+    // sent pic to network score>k trigger winning!
+    let temp = Math.floor(Math.random()*10);
+    if(temp==5){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 function checkWinner(){
     let isOver = AI_Judge_Function(); //score>k => true(winning)
     
     console.log('AI Check winner!', isOver);
     if(isOver){
         // You win
-        socket.emit('gameRoundOver',{roomName: roomID});
+        socket.emit('gameRoundOver',{roomName: roomID, winner: userInfo._id, loser: oppInfo._id});
         console.log('You win!')
         roundOver(userInfo, oppInfo);
 
@@ -247,28 +259,13 @@ function checkWinner(){
 }
 
 function roundOver(winner, losser){
-    console.log('w:', winner);
-    // record setting!
-    // .........
-    // .........
-    // .........
-    // .........
     resetRoom()
 }
 
+// Round over reset
 function resetRoom(){
     offReady()
     document.getElementById('gameSection').classList.add("nonDisplaySection");
     document.getElementById('preGameSection').classList.remove("nonDisplaySection");
     isGmaeStart = false;
-}
-
-function AI_Judge_Function(){
-    // sent pic to network score>k trigger winning!
-    let temp = Math.floor(Math.random()*10);
-    if(temp==5){
-        return true;
-    }else{
-        return false;
-    }
 }

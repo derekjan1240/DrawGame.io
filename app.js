@@ -208,6 +208,28 @@ io.on('connection', (socket)=> {
 
     socket.on('gameRoundOver',(data)=>{
         socket.in(data.roomName).broadcast.emit('losing');
+        // Record update
+        User.findOne({ _id: data.winner}).then((winner)=>{
+            if(winner){
+                winner.win++;
+                winner.save().then((updateUser)=>{
+                    console.log('> update user(record win): ', updateUser);
+                });
+            }else{
+                console.log('Winner No Find!')
+            }
+        })
+
+        User.findOne({ _id: data.loser}).then((loser)=>{
+            if(loser){
+                loser.lose++;
+                loser.save().then((updateUser)=>{
+                    console.log('> update user(record loss): ', updateUser);
+                });
+            }else{
+                console.log('Loser No Find!')
+            }
+        })
     })
 
     // socket.emit('request', /* */); // emit an event to the socket
