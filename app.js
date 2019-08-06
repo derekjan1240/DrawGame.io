@@ -65,35 +65,40 @@ app.get('/profile', (req, res) => {
     req.user?  res.render('profile', { user: req.user }) : res.redirect('/login');
 });
 
+// tensorflow test
+app.get('/ai',(req, res)=>{
+    res.render('tsTest');
+});
+
+// quick draw data test
 app.get('/quickdraw/:title',(req, res)=>{
     res.render('quickDraw');
 });
 
-app.get('/quickdrawDataStreaming/:picTitle', (req, res)=>{
-    streaming(req.params.picTitle).then((drawing)=>{
-        // console.log(drawing.length)
-        const index = Math.floor(Math.random()* drawing.length);
-        // res.send(drawing[index]); 
-        res.send(drawing);  
-    }).catch((err)=>{
-        res.send(null); 
-    })
-});
+// app.get('/quickdrawDataStreaming/:picTitle', (req, res)=>{
+//     streaming(req.params.picTitle).then((drawing)=>{
+//         // console.log(drawing.length)
+//         const index = Math.floor(Math.random()* drawing.length);
+//         res.send(drawing);  
+//     }).catch((err)=>{
+//         res.send(null); 
+//     })
+// });
 
-function streaming(picTitle){
-    let drawing =[];
-    return new Promise((resoive, reject)=>{
-        fs.createReadStream(`./public/drawPic/${picTitle}.ndjson`)
-        .on('error', (err)=>{
-            reject(err)
-        })
-        .pipe(ndjson.parse())
-        .on('data', (obj) => {
-            drawing.push(obj);
-            resoive(drawing);
-        })
-    })
-}
+// function streaming(picTitle){
+//     let drawing =[];
+//     return new Promise((resoive, reject)=>{
+//         fs.createReadStream(`./public/drawPic/${picTitle}.ndjson`)
+//         .on('error', (err)=>{
+//             reject(err)
+//         })
+//         .pipe(ndjson.parse())
+//         .on('data', (obj) => {
+//             drawing.push(obj);
+//             resoive(drawing);
+//         })
+//     })
+// }
 
 // Creste Server
 const server = app.listen(3000, ()=>{
